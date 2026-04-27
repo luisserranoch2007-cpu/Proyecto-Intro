@@ -1,2 +1,2 @@
-#qwudbqwdqjidbjiqwdb
-print ("kasNJDKOASD")
+import game
+import iu
