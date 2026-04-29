@@ -69,6 +69,19 @@ IMAGENES_POKEMONES = {
 }
 
 # ============================================
+# CARGAMOS LAS IMÁGENES DE LOS PERSONAJES/AVATARES
+# Cada personaje tiene su propia imagen de referencia para mostrarse en la pantalla de selección
+# Los archivos deben estar en la misma carpeta que este archivo .py
+# ============================================
+
+# nombre del archivo de imagen de cada personaje
+IMAGENES_PERSONAJES_ARCHIVOS = {
+    "Jeffrey":  "jeffrey.png",   # personaje estilo tribal/urbano con dreads blancos
+    "Carlos K": "carlosk.png",   # personaje estilo oscuro/misterioso con sombrero
+    "Sean":     "sean.png",      # personaje estilo steampunk con abrigo marrón
+}
+
+# ============================================
 # VARIABLES GLOBALES DEL JUEGO
 # Estas las puede leer y modificar cualquier función del código
 # ============================================
@@ -473,6 +486,15 @@ def abrir_seleccion():
 
     personajes = ["Jeffrey", "Carlos K", "Sean"]  # los tres personajes disponibles para elegir
 
+    # ============================================
+    # CARGAMOS LAS IMÁGENES DE REFERENCIA DE CADA PERSONAJE
+    # Las redimensionamos a 200x300 píxeles para que quepan bien en los botones
+    # ============================================
+    imagenes_avatares = {}
+    for nombre_personaje, archivo in IMAGENES_PERSONAJES_ARCHIVOS.items():
+        img = cargar_imagen_pokemon(archivo, tamaño=(200, 300))  # usamos la misma función pero con tamaño más grande
+        imagenes_avatares[nombre_personaje] = img
+
     def elegir_personaje(nombre, botones):
         global personaje_elegido
         personaje_elegido = nombre  # guardamos el personaje que el jugador eligió
@@ -485,7 +507,23 @@ def abrir_seleccion():
 
     botones_personaje = []  # lista donde vamos a guardar los botones
     for p in personajes:
-        b = tk.Button(frame_personajes, text=p, font=("Arial", 16), width=15, height=5)  # botón por cada personaje
+        img_avatar = imagenes_avatares.get(p)  # obtenemos la imagen de referencia del personaje
+
+        if img_avatar:
+            # si tenemos imagen, la mostramos dentro del botón con el nombre abajo
+            b = tk.Button(
+                frame_personajes,
+                text=p,
+                image=img_avatar,
+                compound="top",    # imagen arriba, nombre abajo
+                font=("Arial", 14, "bold"),
+                width=200
+            )
+            b.image = img_avatar  # guardamos la referencia para que Python no elimine la imagen de memoria
+        else:
+            # si no se encontró la imagen, mostramos solo el nombre en un botón grande
+            b = tk.Button(frame_personajes, text=p, font=("Arial", 16), width=15, height=8)
+
         b.pack(side="left", padx=20)   # los ponemos uno al lado del otro con espacio entre ellos
         botones_personaje.append(b)    # lo agregamos a la lista
 
